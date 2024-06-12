@@ -64,8 +64,17 @@ where
             plugin_yaml.display().to_string(),
         ]);
     }
+    let sonobuoy_image_arg = match &workload_config.sonobuoy_image {
+        Some(sonobuoy_image_arg) => {
+            vec!["--sonobuoy-image", sonobuoy_image_arg]
+        }
+        None => {
+            vec![]
+        }
+    };
 
     info!("Running workload");
+    info!("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     let kubeconfig_arg = vec!["--kubeconfig", kubeconfig_path];
     let output = Command::new(SONOBUOY_BIN_PATH)
         .args(kubeconfig_arg.to_owned())
@@ -73,6 +82,7 @@ where
         .arg("--namespace")
         .arg("testsys-workload")
         .args(plugin_test_args)
+        .args(sonobuoy_image_arg)
         .output()
         .context(error::WorkloadProcessSnafu)?;
 
@@ -120,12 +130,22 @@ where
     let kubeconfig_arg = vec!["--kubeconfig", kubeconfig_path];
     let results_filepath = results_dir.join(SONOBUOY_RESULTS_FILENAME);
 
+    let sonobuoy_image_arg = match &workload_config.sonobuoy_image {
+        Some(sonobuoy_image_arg) => {
+            vec!["--sonobuoy-image", sonobuoy_image_arg]
+        }
+        None => {
+            vec![]
+        }
+    };
+
     info!("Rerunning workload");
     let output = Command::new(SONOBUOY_BIN_PATH)
         .args(kubeconfig_arg.to_owned())
         .arg("run")
         .arg("--namespace")
         .arg("testsys-workload")
+        .args(sonobuoy_image_arg)
         .arg("--rerun-failed")
         .arg(results_filepath.as_os_str())
         .output()
