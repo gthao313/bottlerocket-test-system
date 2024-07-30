@@ -15,13 +15,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - cluster: add function to download eks-a bundle file ([#895])
 - vmware: add bundles-override argument to eks-a ([#895])
 - metal: add bundles-override argument to eks-a ([#895])
+- workload: support to use sonobuoy-image ([#900])
+- sonobuoy: add progress report URL argument ([#901])
+- ec2-karpenter-agent: improve cloudformation and nodepool templates ([#907])
+- ec2-resource: extend ec2 resource destroy timeout time ([#911])
 
 ### Changed
 
-- update karpenter agent version to 0.36.1 ([#898])
+- update karpenter agent version to 0.37.0 ([#906])
+- update testsys-launcher docu ([#912])
+- update dependencies, tighten cargo-deny settings ([#915], [#919])
 
 [#895]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/895
-[#898]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/898
+[#900]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/900
+[#901]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/901
+[#906]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/906
+[#907]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/907
+[#911]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/911
+[#912]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/912
+[#915]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/915
+[#919]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/919
 
 [0.0.13]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.13
 
