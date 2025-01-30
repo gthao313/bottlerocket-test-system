@@ -6,6 +6,11 @@ The format is inspired by [Keep a Changelog](https://keepachangelog.com/en/1.0.0
 Since this project is only a vessel for packaging a few binary tools, its adherence to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) is loose at best.
 
+## [0.10.0] - 2025-01-30
+
+Update Bottlerocket SDK to 0.50.1
+Update eksctl to 0.202.0
+
 ## [0.9.0] - 2024-07-23
 
 Update Bottlerocket SDK to 0.42.0
@@ -80,7 +85,7 @@ Update eksctl, eksctl-anywhere
 ## [0.2.1] - 2022-11-01
 
 Update bottlerocket sdk to v0.28.0
-  
+
 ## [0.2.0] - 2022-10-24
 
 Update eksctl, sonobuoy, kubeadm
@@ -105,7 +110,8 @@ Initial version, x86_64-only for now.
 - kubeadm v1.21.6
 - sonobuoy v0.53.2
 
-<!-- example comparison for future releases 
+<!-- example comparison for future releases
 [0.2.0]: https://github.com/bottlerocket-os/bottlerocket-test-system/compare/tools-v0.1.0...tools-v0.2.0 -->
+
 [0.2.0]: https://github.com/bottlerocket-os/bottlerocket-test-system/compare/tools-v0.1.0...tools-v0.2.0
 [0.1.0]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/tools-v0.1.0
