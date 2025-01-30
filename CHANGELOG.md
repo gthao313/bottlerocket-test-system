@@ -6,7 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/bottlerocket-os/bottlerocket-test-system/compare/v0.0.14...develop
+[Unreleased]: https://github.com/bottlerocket-os/bottlerocket-test-system/compare/v0.0.15...develop
+
+## [0.0.15] - 2025-01-30
+
+### Fixed
+
+- add support to create IPv6 clusters ([#957])
+
+### Added
+
+- ec2-resource: add credential-providers and no-proxy settings ([#953])
+- workload: add tests for common runtimes ([#958])
+
+### Changed
+
+- update Bottlerocket SDK version to 0.50.1 ([#939],[#961])
+- update Rust dependencies ([#922],[#961])
+- update `eksctl` to 0.202.0 ([#949],[#962])
+- update tools version to 0.10.0 ([#963])
+- karpenter: update to v1.0.5 ([#939])
+
+[#922]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/922
+[#939]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/939
+[#949]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/949
+[#953]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/953
+[#957]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/957
+[#958]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/958
+[#961]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/961
+[#962]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/962
+[#963]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/963
+[0.0.15]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.15
 
 ## [0.0.14] - 2024-07-31
 
@@ -15,7 +45,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - fixed a bug preventing test names from being printed by `cli status` ([#932])
 
 [#932]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/932
-
 [0.0.14]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.14
 
 ## [0.0.13] - 2024-07-31
@@ -45,7 +74,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#912]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/912
 [#915]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/915
 [#919]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/919
-
 [0.0.13]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.13
 
 ## [0.0.12] - 2024-03-18
@@ -56,7 +84,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [#891]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/891
 [#892]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/892
-
 [0.0.12]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.12
 
 ## [0.0.11] - 2024-01-29
@@ -70,7 +97,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#879]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/879
 [#882]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/882
 [#883]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/883
-
 [0.0.11]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.11
 
 ## [0.0.10] - 2023-10-03
@@ -94,7 +120,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#873]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/873
 [#874]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/874
 [#875]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/875
-
 [0.0.10]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.10
 
 ## [0.0.9] - 2023-09-13
@@ -128,7 +153,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#867]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/867
 [#868]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/868
 [#871]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/871
-
 [0.0.9]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.9
 
 ## [0.0.8] - 2023-06-12
@@ -156,7 +180,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#832]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/832
 [#834]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/834
 [#835]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/835
-
 [0.0.8]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.8
 
 ## [0.0.7] - 2023-03-03
@@ -180,7 +203,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#801]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/801
 [#803]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/803
 [#812]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/812
-
 [0.0.7]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.7
 
 ## [0.0.6] - 2023-03-03
@@ -232,7 +254,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#771]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/771
 [#772]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/772
 [#773]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/773
-
 [0.0.6]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.6
 
 ## [0.0.5] - 2022-12-20
@@ -247,7 +268,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#715]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/715
 [#716]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/716
 [#720]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/720
-
 [0.0.5]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.5
 
 ## [0.0.4] - 2022-12-15
@@ -269,7 +289,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#683]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/683
 [#696]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/696
 [#702]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/702
-
 [0.0.4]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.4
 
 ## [0.0.3] - 2022-11-02
@@ -310,7 +329,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [#635]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/635
 [#580]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/580
 [#607]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/607
-
 [0.0.3]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.3
 
 ## [0.0.2] - 2022-08-31
@@ -322,7 +340,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - This includes all changes since 0.0.1
 
 [#450]: https://github.com/bottlerocket-os/bottlerocket-test-system/pull/450
-
 [0.0.2]: https://github.com/bottlerocket-os/bottlerocket-test-system/tree/v0.0.2
 
 ## [0.0.1] - 2022-06-17
