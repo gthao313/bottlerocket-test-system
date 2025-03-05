@@ -7,7 +7,7 @@ This `lib.rs` provides code that is used by multiple agent binaries or used by t
 !*/
 
 use bottlerocket_types::agent_config::CreationPolicy;
-use resource_agent::provider::{ProviderError, ProviderResult, Resources};
+use resource_agent::provider::{IntoProviderError, ProviderError, ProviderResult, Resources};
 
 pub mod clusters;
 pub mod constants;
@@ -56,4 +56,20 @@ pub async fn is_cluster_creation_required(
             Ok((false, format!("Creation policy is '{:?}' and cluster '{}' exists: not creating cluster", creation_policy, cluster_name)))
         },
     }
+}
+
+/// Retrieve secret value from AWS Secrets Manager
+pub async fn get_secret_value(
+    secretsmanager_client: &aws_sdk_secretsmanager::Client,
+    secret_name: &str,
+) -> ProviderResult<String> {
+    let secret_value = secretsmanager_client
+        .get_secret_value()
+        .secret_id(secret_name)
+        .send()
+        .await
+        .context(Resources::Clear, "Unable to get info from client")?
+        .secret_string
+        .context(Resources::Clear, format!("{} not found", secret_name))?;
+    Ok(secret_value.to_string())
 }

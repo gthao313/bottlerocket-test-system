@@ -1,3 +1,4 @@
+use agent_utils::aws::aws_config;
 use agent_utils::base64_decode_write_file;
 use base64::engine::general_purpose::STANDARD as Base64;
 use base64::Engine;
@@ -6,13 +7,15 @@ use bottlerocket_agents::clusters::{
     write_validate_mgmt_kubeconfig,
 };
 use bottlerocket_agents::constants::TEST_CLUSTER_KUBECONFIG_PATH;
-use bottlerocket_agents::is_cluster_creation_required;
 use bottlerocket_agents::tuf::{download_target, tuf_repo_urls};
 use bottlerocket_agents::vsphere::vsphere_credentials;
+use bottlerocket_agents::{get_secret_value, is_cluster_creation_required};
 use bottlerocket_types::agent_config::{
-    CreationPolicy, VSphereK8sClusterConfig, VSPHERE_CREDENTIALS_SECRET_NAME,
+    CreationPolicy, VSphereK8sClusterConfig, AWS_CREDENTIALS_SECRET_NAME,
+    VSPHERE_CREDENTIALS_SECRET_NAME,
 };
 use k8s_openapi::api::core::v1::Node;
+use k8s_openapi::chrono::format;
 use kube::api::ListParams;
 use kube::config::{KubeConfigOptions, Kubeconfig};
 use kube::{Api, Config};
@@ -36,6 +39,9 @@ const WORKING_DIR: &str = "/local/eksa-work";
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProductionMemo {
+    /// The name of the secret containing aws credentials.
+    pub aws_secret_name: Option<SecretName>,
+
     /// In this resource we put some traces here that describe what our provider is doing.
     pub current_status: String,
 
@@ -47,6 +53,9 @@ pub struct ProductionMemo {
 
     /// Base64 encoded clusterspec for the workload cluster
     pub encoded_clusterspec: String,
+
+    /// The role that is being assumed.
+    pub assume_role: Option<String>,
 
     /// Name of the VM template for the control plane VMs
     pub vm_template: String,
@@ -95,6 +104,23 @@ impl Create for VSphereK8sClusterCreator {
             .context(Resources::Unknown, "Unable to get info from info client")?;
         // Keep track of the state of resources
         let mut resources = Resources::Clear;
+
+        info!("Getting aws credentials");
+        memo.aws_secret_name = spec.secrets.get(AWS_CREDENTIALS_SECRET_NAME).cloned();
+        memo.assume_role.clone_from(&spec.configuration.assume_role);
+
+        let shared_config = aws_config(
+            &spec.secrets.get(AWS_CREDENTIALS_SECRET_NAME),
+            &spec.configuration.assume_role,
+            &None,
+            &None,
+            &None,
+            false,
+        )
+        .await
+        .context(Resources::Clear, "Error creating config")?;
+
+        let secret_manager_client = aws_sdk_secretsmanager::Client::new(&shared_config);
 
         info!("Getting vSphere secret");
         memo.current_status = "Getting vSphere secret".to_string();
@@ -179,6 +205,7 @@ impl Create for VSphereK8sClusterCreator {
                 &bundle_manifest_path,
                 &mut resources,
                 &mut memo,
+                &secret_manager_client,
             )
             .await?;
             retrieve_workload_cluster_kubeconfig(
@@ -251,6 +278,7 @@ async fn create_vsphere_k8s_cluster(
     bundle_manifest_path: &str,
     resources: &mut Resources,
     memo: &mut ProductionMemo,
+    secret_manager_client: &aws_sdk_secretsmanager::Client,
 ) -> ProviderResult<()> {
     let (metadata_url, targets_url) = tuf_repo_urls(&config.tuf_repo, resources)?;
 
@@ -437,6 +465,7 @@ async fn create_vsphere_k8s_cluster(
         resources,
         &clusterspec_path,
         memo,
+        secret_manager_client,
     )
     .await?;
 
@@ -494,6 +523,7 @@ async fn write_vsphere_clusterspec(
     resources: &Resources,
     clusterspec_path: &str,
     memo: &mut ProductionMemo,
+    secret_manager_client: &aws_sdk_secretsmanager::Client,
 ) -> ProviderResult<()> {
     let cluster_name = config.name.to_owned();
     let cluster_version = config.version.unwrap_or_default().major_minor_without_v();
@@ -504,6 +534,11 @@ async fn write_vsphere_clusterspec(
     let vcenter_datastore = config.vcenter_datastore.to_owned();
     let vcenter_workload_folder = config.vcenter_workload_folder.to_owned();
     let vcenter_resource_pool = config.vcenter_resource_pool.to_owned();
+    let eksa_entended_license_vlaue = get_secret_value(
+        secret_manager_client,
+        format!("{}-token", &cluster_name).as_str(),
+    )
+    .await?;
 
     let about_cert_output = Command::new("govc")
         .args(["about.cert", "-k", "-json"])
@@ -566,6 +601,7 @@ spec:
       kind: VSphereMachineConfig
       name: {cluster_name}-node
   kubernetesVersion: "{cluster_version}"
+  licenseToken: "{eksa_entended_license_vlaue}"
   workerNodeGroupConfigurations:
   - count: 1
     machineGroupRef:
