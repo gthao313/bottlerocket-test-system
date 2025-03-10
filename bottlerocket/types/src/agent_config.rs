@@ -145,6 +145,9 @@ impl Default for EksctlConfig {
 #[serde(rename_all = "camelCase")]
 #[crd("Resource")]
 pub struct VSphereK8sClusterConfig {
+    /// The role that should be assumed when creating the vms.
+    pub assume_role: Option<String>,
+
     /// vSphere K8s cluster name.
     pub name: String,
 
@@ -288,14 +291,18 @@ pub struct Ec2Config {
     /// The security groups that should be attached to the instances.
     #[serde(default)]
     pub security_groups: Vec<String>,
+
+    /// The device mappings used for EC2 resource provisioning
+    #[serde(default)]
+    pub device_mappings: Vec<DeviceMapping>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
-pub struct KarpenterDeviceMapping {
+pub struct DeviceMapping {
     pub name: String,
     pub volume_type: String,
-    pub volume_size: u8,
+    pub volume_size: i32,
     pub delete_on_termination: bool,
 }
 
@@ -332,7 +339,7 @@ pub struct Ec2KarpenterConfig {
 
     /// The device mappings used for karpenter provisioning
     #[serde(default)]
-    pub device_mappings: Vec<KarpenterDeviceMapping>,
+    pub device_mappings: Vec<DeviceMapping>,
 
     /// The type of instance to spin up. m5.large is recommended for x86_64 and m6g.large is
     /// recommended for arm64 on eks

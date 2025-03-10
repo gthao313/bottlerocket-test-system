@@ -3,16 +3,18 @@ use agent_utils::json_display;
 use aws_sdk_ec2::error::SdkError as Ec2SdkError;
 use aws_sdk_ec2::operation::run_instances::builders::RunInstancesFluentBuilder;
 use aws_sdk_ec2::operation::run_instances::{RunInstancesError, RunInstancesOutput};
+use aws_sdk_ec2::types::builders::BlockDeviceMappingBuilder;
 use aws_sdk_ec2::types::{
     ArchitectureValues, Filter, HttpTokensState, IamInstanceProfileSpecification,
     InstanceMetadataEndpointState, InstanceMetadataOptionsRequest, InstanceType, ResourceType, Tag,
     TagSpecification,
 };
+use aws_sdk_ec2::types::{BlockDeviceMapping, EbsBlockDevice, VolumeType};
 use base64::engine::general_purpose::STANDARD as Base64;
 use base64::Engine;
 use bottlerocket_agents::userdata::{decode_to_string, merge_values};
 use bottlerocket_types::agent_config::{
-    ClusterType, CustomUserData, Ec2Config, AWS_CREDENTIALS_SECRET_NAME,
+    ClusterType, CustomUserData, DeviceMapping, Ec2Config, AWS_CREDENTIALS_SECRET_NAME,
 };
 use log::{debug, info, trace, warn};
 use resource_agent::clients::InfoClient;
@@ -269,6 +271,9 @@ where
                     &spec.configuration.custom_user_data,
                     memo,
                 )?)
+                .set_block_device_mappings(Some(block_device_mappings(
+                    &spec.configuration.device_mappings,
+                )))
                 .iam_instance_profile(
                     IamInstanceProfileSpecification::builder()
                         .arn(&spec.configuration.instance_profile_arn)
@@ -492,6 +497,25 @@ fn default_ecs_userdata(cluster_name: &str) -> String {
 cluster = "{}""#,
         cluster_name,
     ))
+}
+
+///Generate the block device mappings for the instances.
+fn block_device_mappings(device_mappings: &Vec<DeviceMapping>) -> Vec<BlockDeviceMapping> {
+    device_mappings
+        .iter()
+        .map(|mapping| {
+            BlockDeviceMapping::builder()
+                .device_name(mapping.name.clone())
+                .ebs(
+                    EbsBlockDevice::builder()
+                        .delete_on_termination(mapping.delete_on_termination)
+                        .volume_type(VolumeType::from(mapping.volume_type.as_str()))
+                        .volume_size(mapping.volume_size)
+                        .build(),
+                )
+                .build()
+        })
+        .collect()
 }
 
 #[derive(Debug)]
